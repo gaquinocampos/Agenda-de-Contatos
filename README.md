@@ -1,7 +1,6 @@
 # 📖 Agenda de Contatos em Python (CLI)
 
 [![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
-[![Status](Concluído-success.svg)](https://github.com)
 
 Sistema de gerenciamento de contatos desenvolvido em Python para operar via linha de comando (CLI). O projeto implementa todas as operações fundamentais de um **CRUD** (Create, Read, Update, Delete) utilizando estruturas de dados nativas da linguagem.
 
