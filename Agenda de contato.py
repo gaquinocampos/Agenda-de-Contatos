@@ -2,11 +2,11 @@ import json
 import os
 import time
 
-arquivo_agenda = "contatos.json"
+arq_ag = "contatos.json"
 
-def exibir_menu():
+def ver_mn():
     print("\n" + "="*30)
-    print("       AGENDA DE CONTATOS      ")
+    print("        AGENDA DE CONTATOS       ")
     print("="*30)
     print("1. Adicionar Contato (Create)")
     print("2. Listar Contatos (Read)")
@@ -18,74 +18,74 @@ def exibir_menu():
     print("7. Sair")
     print("="*30)
 
-def adicionar_contato(contatos):
+def cad_contat(cts):
     print("\n--- Adicionar Novo Contato ---")
-    nome = input("Nome: ").strip()
-    telefone = input("Telefone: ").strip()
-    email = input("E-mail: ").strip()
+    nom = input("Nome: ").strip()
+    tel = input("Telefone: ").strip()
+    eml = input("E-mail: ").strip()
     
-    if not nome:
+    if not nom:
         print("Erro: O nome do contato não pode estar vazio!")
         return
     
-    contato = {
-        "nome": nome,
-        "telefone": telefone,
-        "email": email
+    ctt = {
+        "nome": nom,
+        "telefone": tel,
+        "email": eml
     }
-    contatos.append(contato)
-    print(f"Sucesso! Contato '{nome}' foi adicionado.")
+    cts.append(ctt)
+    print(f"Sucesso! Contato '{nom}' foi adicionado.")
 
-def listar_contatos(contatos):
+def list_cont(cts):
     print("\n--- Lista de Contatos ---")
-    if not contatos:
+    if not cts:
         print("Nenhum contato cadastrado na agenda.")
         return
     
-    for i, contato in enumerate(contatos, 1):
-        print(f"[{i}] Nome: {contato['nome']} | Telefone: {contato['telefone']} | E-mail: {contato['email']}")
+    for i, ctt in enumerate(cts, 1):
+        print(f"[{i}] Nome: {ctt['nome']} | Telefone: {ctt['telefone']} | E-mail: {ctt['email']}")
 
-def buscar_contato(contatos):
+def bsc_cont(cts):
     print("\n--- Buscar Contato ---")
-    if not contatos:
+    if not cts:
         print("A agenda está vazia.")
         return
         
-    termo = input("Digite o nome (ou parte dele) para buscar: ").lower().strip()
-    encontrados = [c for c in contatos if termo in c['nome'].lower()]
+    trm = input("Digite o nome (ou parte dele) para buscar: ").lower().strip()
+    enc = [c for c in cts if trm in c['nome'].lower()]
     
-    if not encontrados:
+    if not enc:
         print("Nenhum contato encontrado com esse nome.")
         return
     
-    print(f"\nForam encontrados {len(encontrados)} contato(s):")
-    for contato in encontrados:
-        print(f"- Nome: {contato['nome']} | Telefone: {contato['telefone']} | E-mail: {contato['email']}")
+    print(f"\nForam encontrados {len(enc)} contato(s):")
+    for ctt in enc:
+        print(f"- Nome: {ctt['nome']} | Telefone: {ctt['telefone']} | E-mail: {ctt['email']}")
 
-def atualizar_contato(contatos):
+def atu_cont(cts):
     print("\n--- Atualizar Contato ---")
-    listar_contatos(contatos)
-    if not contatos:
+    list_cont(cts)
+    if not cts:
         return
     
     try:
-        indice = int(input("\nDigite o número do contato que deseja atualizar: ")) - 1
+        idx = int(input("\nDigite o número do contato que deseja atualizar: ")) - 1
         
-        if 0 <= indice < len(contatos):
-            contato_atual = contatos[indice]
-            print(f"Editando contato: {contato_atual['nome']}")
+        if 0 <= idx < len(cts):
+            ctt_at = cts[idx]
+            print(f"Editando contato: {ctt_at['nome']}")
             print("Dica: Pressione Enter sem digitar nada caso não queira alterar o campo.")
             
-            novo_nome = input(f"Novo nome [{contato_atual['nome']}]: ").strip()
-            novo_tel = input(f"Novo telefone [{contato_atual['telefone']}]: ").strip()
-            novo_email = input(f"Novo e-mail [{contato_atual['email']}]: ").strip()
+            nov_nom = input(f"Novo nome [{ctt_at['nome']}]: ").strip()
+            nov_tel = input(f"Novo telefone [{ctt_at['telefone']}]: ").strip()
+            nov_eml = input(f"Novo e-mail [{ctt_at['email']}]: ").strip()
             
-            if novo_nome:
-                contato_atual['nome'] = novo_nome
-            if novo_tel:
-                contato_atual['telefone'] = novo_tel
-            if novo_email:
-                contato_atual['email'] = novo_email
+            if nov_nom:
+                ctt_at['nome'] = nov_nom
+            if nov_tel:
+                ctt_at['telefone'] = nov_tel
+            if nov_eml:
+                ctt_at['email'] = nov_eml
                 
             print("Contato atualizado com sucesso!")
         else:
@@ -93,72 +93,72 @@ def atualizar_contato(contatos):
     except ValueError:
         print("Por favor, digite apenas números válidos.")
 
-def deletar_contato(contatos):
+def exc_cont(cts):
     print("\n--- Excluir Contato ---")
-    listar_contatos(contatos)
-    if not contatos:
+    list_cont(cts)
+    if not cts:
         return
     
     try:
-        indice = int(input("\nDigite o número do contato que deseja excluir: ")) - 1
+        idx = int(input("\nDigite o número do contato que deseja excluir: ")) - 1
         
-        if 0 <= indice < len(contatos):
-            removido = contatos.pop(indice)
-            print(f"Contato '{removido['nome']}' excluído com sucesso!")
+        if 0 <= idx < len(cts):
+            rmv = cts.pop(idx)
+            print(f"Contato '{rmv['nome']}' excluído com sucesso!")
         else:
             print("Número de contato inválido.")
     except ValueError:
         print("Por favor, digite apenas números válidos.")
 
-def verificar_backup():
-    if os.path.exists(arquivo_agenda):
-        tamanho = os.path.getsize(arquivo_agenda)
-        timestamp_modificacao = os.path.getmtime(arquivo_agenda)
-        hora_formatada = time.strftime('%d/%m/%Y às %H:%M:%S', time.localtime(timestamp_modificacao))
+def vrf_bkp():
+    if os.path.exists(arq_ag):
+        tam = os.path.getsize(arq_ag)
+        ts_mod = os.path.getmtime(arq_ag)
+        hr_fmt = time.strftime('%d/%m/%Y às %H:%M:%S', time.localtime(ts_mod))
         
-        print(f"\n[Status] O arquivo de backup '{arquivo_agenda}' existe!")
-        print(f"-> Último salvamento: {hora_formatada}")
-        print(f"-> Tamanho do arquivo: {tamanho} bytes")
+        print(f"\n[Status] O arquivo de backup '{arq_ag}' existe!")
+        print(f"-> Último salvamento: {hr_fmt}")
+        print(f"-> Tamanho do arquivo: {tam} bytes")
     else:
-        print(f"\n[Status] O arquivo '{arquivo_agenda}' ainda não foi criado.")
+        print(f"\n[Status] O arquivo '{arq_ag}' ainda não foi criado.")
 
-def criar_backup(contatos):
-    with open(arquivo_agenda, 'w', encoding='utf-8') as f:
-        json.dump(contatos, f, indent=4, ensure_ascii=False)
+def cri_bkp(cts):
+    with open(arq_ag, 'w', encoding='utf-8') as f:
+        json.dump(cts, f, indent=4, ensure_ascii=False)
     print("Backup criado e contatos salvos com sucesso!")
-    verificar_backup()
+    vrf_bkp()
 
-def carregar_backup():
+def car_bkp():
     try:
-        with open(arquivo_agenda, 'r', encoding='utf-8') as f:
-            dados = json.load(f)
+        with open(arq_ag, 'r', encoding='utf-8') as f:
+            dds = json.load(f)
             print("Backup carregado com sucesso!")
-            return dados
+            return dds
     except FileNotFoundError:
         print("Ainda não existe nenhum arquivo de backup.")
         return []
 
 def main():
-    contatos = []
+    cts = []
     while True:
-        exibir_menu()
-        opcao = input("\nEscolha uma opção: ").strip()
+        ver_mn()
+        opc = input("\nEscolha uma opção: ").strip()
         
-        if opcao == '1':
-            adicionar_contato(contatos)
-        elif opcao == '2':
-            listar_contatos(contatos)
-        elif opcao == '3':
-            buscar_contato(contatos)
-        elif opcao == '4':
-            atualizar_contato(contatos)
-        elif opcao == '5':
-            deletar_contato(contatos)
-        elif opcao == '6':
-            criar_backup(contatos)
-        elif opcao.lower() == 'extra':
-            contatos = carregar_backup()
-        elif opcao == '7':
+        if opc == '1':
+            cad_contat(cts)
+        elif opc == '2':
+            list_cont(cts)
+        elif opc == '3':
+            bsc_cont(cts)
+        elif opc == '4':
+            atu_cont(cts)
+        elif opc == '5':
+            exc_cont(cts)
+        elif opc == '6':
+            cri_bkp(cts)
+        elif opc.lower() == 'extra':
+            cts = car_bkp()
+        elif opc == '7':
             print("\nEncerrando a agenda. Até logo!")
             break
         else:
